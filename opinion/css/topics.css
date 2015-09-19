@@ -1,0 +1,68 @@
+#my_links{
+  color: #666;
+  background-clip: inherit;
+  border: 1px solid #E1E8ED;
+  line-height: inherit;
+  padding: 15px;
+  background-color: #FFF;
+  border-radius: 5px;
+}
+#top_stories {
+  color: #666;
+  background-clip: inherit;
+  border: 1px solid #E1E8ED;
+  line-height: inherit;
+  padding: 15px;
+  background-color: #FFF;
+  border-radius: 5px;
+}
+#trending {
+  color: #666;
+  background-clip: inherit;
+  border: 1px solid #E1E8ED;
+  line-height: inherit;
+  padding: 15px;
+  background-color: #FFF;
+  border-radius: 5px;
+}
+
+
+td{
+  vertical-align: top;
+  text-align: left;
+  max-width: 500px;
+  overflow: hidden;
+}
+
+
+#submit_btn{
+  color: #FFF;
+  cursor: pointer;
+  height: 32px;
+  margin-top: 7px;
+  margin-right: 0px;
+  opacity: 1;
+  padding: 0px 7px 0px 8px;
+  color: #FFF;
+  background-color: #55ACEE;
+  background-image: linear-gradient(transparent, rgba(0, 0, 0, 0.05));
+  border: 1px solid #3B88C3;
+  box-shadow: 0px 1px 0px rgba(255, 255, 255, 0.15) inset;
+  border-radius: 4px;
+}
+
+.big{
+  font-weight: normal;
+  font-size: 20px;  
+}
+#recent_opinion{
+  font-family: 'Hoefler Text', Georgia, 'Times New Roman', serif;
+  font-weight: normal;
+  font-size: 1.75em;
+  letter-spacing: .1em;
+  line-height: 1.0em;
+  margin: 0px;
+  text-align: center;
+  text-transform: uppercase;
+  color: #6a9ca7;
+}

@@ -1,0 +1,159 @@
+<!DOCTYPE html> 
+<html>
+<head>
+
+	<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+	<meta content="utf-8" http-equiv="encoding">
+	<link rel="icon" type="image/png" href="img/favicon.ico">
+	<title>Topics</title>
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+	<link rel="stylesheet" href="css/style.css">
+	<link rel="stylesheet" href="css/topics.css">
+	<style type="text/css">a {text-decoration: none}</style>
+
+</head>
+ 
+<body>
+	<table align="center">
+		<tr>
+			<td width="30%">
+				<a href><img src="img/logo.png" height="70px" width="70px"></a>
+			</td>
+			<td align="center" width="70%">
+				<form action="search">
+	  				<input type="text" name="fname" value="Search">
+	  				<input type="submit" value="Submit">
+				</form> 
+			</td>
+		</tr>
+
+		<tr>
+			<td width="45%">
+				<table>
+					<tr>
+						<td align="top">
+							<div id="my_links">
+								<a href="">Profile</a><br>
+								<a href="">My Opinions</a><br>
+								<a href="">My Opinion Requests</a><br>
+							</div>
+						</td>
+					</tr>
+					<br>
+					<tr>
+						<td>
+							<div id="top_stories">
+							<p><span class="underline">Give Your Opinion On</span></p>
+								<a href="">Permanent Topics</a><br><br>
+								<a href="">Fleeting Topics</a><br><br>
+							</div>
+						</td>
+					</tr>
+					<br>
+					<tr>	
+						<td>
+							<div id="trending">
+							<p><span class="underline">Top Opinions</span></p>
+								<a href="">Salman Khan Hit and Run Case</a><br><br>
+								<a href="">Death of Dave Goldberf</a><br><br>
+								<a href="">Tesla Powerwalls</a><br><br>
+								<a href="">2015 UK Elections</a><br><br>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td width="60%">
+				<div id="opinion_box_section" align="center">
+						<div id="topic_title"><span class="headline">Need Opinion On:</span></div><br>
+						<form method="post" action="">
+							<div id="text_area_topic">
+								<textarea  rows="4" cols="50" id="topic_create_box" name="comment"> </textarea>
+							</div>
+							<div align="left">
+								<input type="checkbox" name="vehicle" value="Bike"> I think this topic will be relevent 6 months from now<br>
+							</div>
+							<div align="left">
+								<input type="checkbox" name="vehicle" value="Bike"> Needs a poll<br>
+							</div>
+						<div align="left">
+						Category:
+							<select name="mydropdown" id="select_category">
+								<option value="current_affairs">Current Affairs</option>
+								<option value="politics">Politics</option>
+								<option value="business">Business</option>
+								<option value="entertainment">Entertainment</option>
+								<option value="Science & Technology">Science & technology</option>
+								<option value="sports">Sports</option>
+							</select>
+						</div>
+							<br>
+						<button value="all" type="submit" id="submit_btn">Submit</button>
+						</form>
+				</div>
+				<br><br>
+				<div id="category_parent"><span id="recent_opinion">Recent Opinions</span>	
+						<div id="topics"></div>
+				</div>
+			</td>
+		</tr>
+	</table>
+
+ <script type="text/javascript">
+ jQuery.support.cors = true;
+$(document).ready(function(){
+
+var getTopicApi = "http://hritupon:9000/retrieve/topic";
+  $.getJSON( getTopicApi, {
+    format: "json"
+  })
+    .done(function( data ) {
+     	for (var key in data) {
+     		 $('#topics').append('<p><span class="oval">'+key+'</span></p>');
+     		 var list=data[key];
+     		 for(var index=0;index<list.length;index++){
+     		 	var object=list[index];	
+	   		 	var topic_name=object['topic_name'];
+     		 	var topic_id=object['topic_id'];
+     		 	var count=object['response_count']
+     		 	$('#topics').append('<p><a href=topicDetails.html?id='+topic_id+'>'+topic_name+'<br><span class="count">'+count+'</span></p></a>');
+     		 }
+     		 $('#topics').append('<a href>...</a><br><hr>');
+		}
+    });
+
+
+
+
+
+  $(':submit').on('click', function() { // This event fires when a button is clicked
+    var button = $(this).val();
+    jQuery.support.cors = true;
+    var topic_data=$("#topic_create_box").val();
+    var category_data=$("#select_category").val();
+    var jsonData = {};
+    jsonData['category']=category_data;
+    jsonData['topic']=topic_data;
+    jsonData['user_name']='hritupon';
+    jsonData['auth']='1c5fa5be-4f92-42be-a00f-56d27e09dcf1';
+    var jsonPostData=JSON.stringify(jsonData);
+    $.ajax(
+	    { 
+	      type: 'POST',	
+	      url: 'http://localhost:9000/ingest/topic', 
+	      data: jsonPostData, 
+	      contentType: "application/json; charset=utf-8",
+	      dataType: 'json', 
+	      success: function( data ){
+	       	//$.ready(); 
+		  }
+	      
+	    }
+    );
+    //return false; // keeps the page from not refreshing 
+    return true;
+  });
+});
+</script>
+</body>
+</html>

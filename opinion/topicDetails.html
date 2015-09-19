@@ -1,0 +1,200 @@
+<!DOCTYPE html> 
+<html>
+<head>
+<head>
+<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+<meta content="utf-8" http-equiv="encoding">
+<link rel="icon" type="image/png" href="img/favicon.ico">
+<title>Topics</title>
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js" type="text/javascript"></script>
+<link rel="stylesheet" href="css/style.css">
+<link rel="stylesheet" href="css/topic_details.css">
+
+<!-- Write Javascript code here -->
+ <style type="text/css">a {text-decoration: none}</style>
+ <style>
+ 
+ 
+ </style>
+
+
+
+</head>
+</head>
+ 
+<body>
+
+
+<body>
+	<table align="center">
+		<tr>
+			<td width="30%">
+				<a href="index.html"><img src="img/logo.png" height="70px" width="70px"></a>
+			</td>
+			<td align="center" width="70%">
+				<form action="search">
+	  				<input type="text" name="fname" value="Search">
+	  				<input type="submit" value="Submit">
+				</form> 
+			</td>
+		</tr>
+
+		<tr>
+			<td width="40%">
+				<table>
+					<tr>
+						<td align="top">
+							<div id="my_links">
+								<a href="">Profile</a><br>
+								<a href="">My Opinions</a><br>
+								<a href="">My Opinion Requests</a><br>
+							</div>
+						</td>
+					</tr>
+					<br>
+					<tr>
+						<td>
+							<div id="top_stories">
+							<p><span class="underline">Top Opinions</span></p>
+								<a href="">Education</a><br>
+								<a href="">Entertainment</a><br>
+								<a href="">Politics</a><br>
+								<a href="">Sports</a><br>
+							</div>
+						</td>
+					</tr>
+					<br>
+					<tr>	
+						<td>
+							<div id="trending">
+							<p><span class="underline">Trending Opinions</span></p>
+								<a href="">Salman Khan Hit and Run Case</a><br><br>
+								<a href="">Death of Dave Goldberf</a><br><br>
+								<a href="">Tesla Powerwalls</a><br><br>
+								<a href="">2015 UK Elections</a><br><br>
+							</div>
+						</td>
+					</tr>
+				</table>
+			</td>
+			<td width="60%">
+				<div align="left">
+					<div id="topic_name"></div>
+					<div id="topic_title"><h3>My Opinion:</h3></div>
+					<form method="post" action="">
+						<div id="text_area_topic">
+							<textarea  rows="4" cols="50" id="post_create_box" name="comment"> </textarea>
+						</div>
+					    <div align="left">
+						My opinion is:
+							<select name="mydropdown" id="select_response">
+								<option value="positive">Positive</option>
+								<option value="negative">Negative</option>
+								<option value="neutral">Neutral</option>
+							</select>
+						</div>
+					    <button value="all" type="submit" id="submit_btn">Submit Opinion</button>
+					 </form>
+					<br><br>
+					 <div id="replies"><div id="responses"><div id="first_one">Be the first one to give opinion</div></div></div>
+				 </div>
+			</td>
+		</tr>
+	</table>
+<script type="text/javascript">
+ jQuery.support.cors = true;
+
+$(document).ready(function(){
+
+
+	$.urlParam = function(name){
+	    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+	    if (results==null){
+	       return null;
+	    }
+	    else{
+	       return results[1] || 0;
+	    }
+	}
+
+	  //get the topic data
+	  var getTopicApi = "http://hritupon:9000/retrieve/topic/"+$.urlParam('id');
+	  $.getJSON( getTopicApi, {
+	    format: "json"
+	  })
+	    .done(function( data ) {
+	     	for (var key in data) {
+	     		 $('#topic_name').append('<p>Topic:<h2 id="topic_text">'+key+'</h2></p>');
+	     	}
+	    });
+
+
+	//get the topic responses
+	var getTopicResponseApi = "http://hritupon:9000/retrieve/topic/posts/"+$.urlParam('id');
+	  $.getJSON( getTopicResponseApi, {
+	    format: "json"
+	  })
+	    .done(function( data ) {
+        	for (var key in data) { 
+	     			var list=data[key];
+	     			for(var index in list){
+	     				var list_data=list[index];
+	     				if(list_data!=null){
+		     				var post_id=list_data['post_id'];
+		     				var post_data=list_data['post_data'];
+		     				var user_id=list_data['user_id'];
+		     				if(!post_id || !post_data || !user_id){
+		     					continue;	
+		     				}else{
+		     					$('#first_one').remove();
+		     					$('#responses').append(
+		     						'<p><table id="resp_box"><tr><td><img src="img/avatar.jpg" class="avatar"><span class="user_name">'+user_id+':</span></td></tr><tr><td>'+'<p><span class="data">'+post_data+'</span></p></td></tr></p>'
+		     					);
+		     				}
+	     				}
+	     			}
+	     		 //$('#responses').append('<p><span class="oval">'+key+'</span></p>');
+	     	}
+	    });
+
+
+
+	  $(':submit').on('click', function() { // This event fires when a button is clicked
+	    var button = $(this).val();
+	    jQuery.support.cors = true;
+	    var post_data=$("#post_create_box").val();
+	    var user_id='hritupon';
+	    var topic_id=$.urlParam('id');
+
+	    var jsonData = {};
+	    jsonData['post_data']=post_data;
+		jsonData['topic_id']=topic_id;
+		jsonData['user_name']=user_id;
+		jsonData['auth']='1c5fa5be-4f92-42be-a00f-56d27e09dcf1';
+
+		var jsonPostData=JSON.stringify(jsonData);
+	    var post_url='http://hritupon:9000/ingest/opinion';
+	    $.ajax(
+		    { 
+		      type: 'POST',	
+		      url: post_url, 
+		      data: jsonPostData, 
+		      contentType: "application/json; charset=utf-8",
+		      dataType: 'json', 
+		      success: function( data ){
+		       	$.ready(); 
+			  }
+		      
+		    }
+	    );
+	    return true; // keeps the page from not refreshing 
+	  });
+
+
+
+
+});
+</script>
+</body>
+</html>
+

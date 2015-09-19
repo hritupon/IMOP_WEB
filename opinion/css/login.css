@@ -1,0 +1,25 @@
+html { 
+  background: url(../img/backgound/img2.jpg) no-repeat center center fixed; 
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+
+}
+
+h1{
+  color: #FFF;
+  font-size: 38px;
+  line-height: 44px;
+  margin-bottom: 30px;
+  text-shadow: none;
+}
+
+p{
+  color: #FFF;
+font-size: 21px;
+line-height: 31px;
+text-shadow: none;
+font-weight: 300;
+font-family: Arial,sans-serif;
+}
